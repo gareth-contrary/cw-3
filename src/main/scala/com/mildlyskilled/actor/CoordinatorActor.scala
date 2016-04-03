@@ -39,27 +39,45 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
   }
 
   def receive = {
-    //TraceImage message being processing.
+    
+    //TraceImage message begins processing.
     case CoordinatorProtocol.TraceImage =>
-      //Deleates the first row o f work for each actor.
+      //Delegates the first portion of work for each actor.
       for (i <- 0 until nrOfWorkers) {
-        //
+        //Calls nextRow which increments currentRow. If nextRow returns true then work is delegated.
+        //If nextRow returns false, then no work is delegated.
         if (nextRow()) {
           router.route(TracerProtocol.TracePixel(scene, image.width, image.height, currentRow), self)
         }
       }
+    
+    //A Set message inform the coordinator about the color of a pixel. The coordinator applies this colour
+    //to the image.
     case CoordinatorProtocol.Set(x: Int, y: Int, c: Color) =>
+      //Applies the colour to the image where x and y indicate coordinates and c is a Color object.
       image(x, y) = c
+      //Decrements one from waiting.
       waiting -= 1
+      
+    //RequestMoreWork messages are sent by TracerActors when they run out of work.
     case CoordinatorProtocol.RequestMoreWork =>
-      var row = nextRow()
-      if (currentRow < image.height) {
+      //Calls nextRow which increments currentRow. If nextRow returns true then work is delegated.
+      //If nextRow returns false, then no work is delegated.
+      if (nextRow()) {
          router.route(TracerProtocol.TracePixel(scene, image.width, image.height, row), self)
-      } else if (waiting == 0) {
+      //Checks whether waiting equals 0. When waiting is 0, then all processing is complete.
+      //The coordinator informs the Listener using a Finish message..
+      }else if (waiting == 0) {
         listener ! ListenerProtocol.Finish(image, outputFile)
       }
   }
-
+  
+  /**
+   * Increments the currentRow counter by 1. Returns truw or false depending on whether the row is
+   * in bounds of the image file.
+   * 
+   * @return true if current row was incremented.
+   */
   private def nextRow(): Boolean = {
     if (currentYAxis != image.height) {
       currentRow += 1
