@@ -47,7 +47,7 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
         //Calls nextRow which increments currentRow. If nextRow returns true then work is delegated.
         //If nextRow returns false, then no work is delegated.
         if (nextRow()) {
-          router.route(TracerProtocol.TracePixel(scene, image.width, image.height, currentRow), self)
+          router.route(TracerProtocol.TracePixels(scene, image.width, image.height, currentRow), self)
         }
       }
     
@@ -65,7 +65,7 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
       //Calls nextRow which increments currentRow. If nextRow returns true then work is delegated.
       //If nextRow returns false, then no work is delegated.
       if (nextRow()) {
-         router.route(TracerProtocol.TracePixel(scene, image.width, image.height, currentRow), self)
+         router.route(TracerProtocol.TracePixels(scene, image.width, image.height, currentRow), self)
       //Checks whether waiting equals 0. When waiting is 0, then all processing is complete.
       //The coordinator informs the Listener using a Finish message..
       } else if (waiting == 0) {

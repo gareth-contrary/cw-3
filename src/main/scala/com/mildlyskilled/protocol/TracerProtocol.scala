@@ -8,10 +8,24 @@ import com.mildlyskilled.Scene
   */
 
 
-
+/**
+ * Mesages received by a TracerActor.
+ */
 object TracerProtocol {
-
+  
+  /**
+   * A message which a TracerActor understands.
+   */
   sealed trait Message
-  case class TracePixel(scene: Scene, width: Int, height: Int, row: Int) extends Message
+  
+  /**
+   * Informs the TracerActor which pixels to process.
+   * 
+   * @param scene describes the objects an light in a scene.
+   * @param width of the image to be processed.
+   * @param height of the image to be processed.
+   * @param row to be processed. by the TracerActor.
+   */
+  case class TracePixels(scene: Scene, width: Int, height: Int, row: Int) extends Message
   
 }

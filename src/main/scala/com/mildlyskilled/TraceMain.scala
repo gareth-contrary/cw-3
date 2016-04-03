@@ -3,6 +3,9 @@ import com.mildlyskilled._
 import com.mildlyskilled.actor.{Listener, CoordinatorActor}
 import com.mildlyskilled.protocol.CoordinatorProtocol
 
+/**
+ * Main method.
+ */
 object TraceMain extends App {
 
   val (infile, outfile) = ("src/main/resources/input.dat", "output.png")
