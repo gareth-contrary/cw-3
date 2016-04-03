@@ -17,6 +17,6 @@ object CoordinatorProtocol {
 
   sealed trait Message
   case class Set(x: Int, y: Int, c: Color) extends Message
-  case class TraceImage(scene: Scene) extends Message
+  case class TraceImage extends Message
   case class RequestMoreWork() extends Message
 }
