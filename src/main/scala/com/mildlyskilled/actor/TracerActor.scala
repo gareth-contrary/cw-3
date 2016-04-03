@@ -14,10 +14,11 @@ class TracerActor extends Actor with ActorLogging {
 
 
   def receive = {
-    case TracerProtocol.TracePixel(scene: Scene, width: Int, height: Int, x: Int, y: Int) =>
-      val colour = scene.traceImage(width, height, x,  y)
-      sender ! CoordinatorProtocol.Set(x, y, colour)
+    case TracerProtocol.TracePixel(scene: Scene, width: Int, height: Int, row: Int) =>     
+      val pixels = for(x <- 0 until width) yield (x, row)
+      for((x, y) <- pixels) {
+        sender ! CoordinatorProtocol.Set(x, y, scene.traceImage(width, height, x,  y))
+      }
+      sender ! CoordinatorProtocol.RequestMoreWork
   }
-
-
 }

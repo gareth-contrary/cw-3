@@ -12,6 +12,6 @@ import com.mildlyskilled.Scene
 object TracerProtocol {
 
   sealed trait Message
-  case class TracePixel(scene: Scene, width: Int, height: Int, x: Int, y: Int) extends Message
+  case class TracePixel(scene: Scene, width: Int, height: Int, row: Int) extends Message
   
 }
