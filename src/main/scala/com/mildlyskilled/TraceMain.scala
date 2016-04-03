@@ -37,6 +37,6 @@ object TraceMain extends App {
     
     //Send a TraceImage message to the CoordinatorActor. TraceImage kickstarts 
     //the processing.
-    coord ! CoordinatorProtocol.TraceImage(scene)
+    coord ! CoordinatorProtocol.TraceImage
   }
 }

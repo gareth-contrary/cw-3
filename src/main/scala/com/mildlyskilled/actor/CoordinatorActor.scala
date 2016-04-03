@@ -55,6 +55,7 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
     //to the image.
     case CoordinatorProtocol.Set(x: Int, y: Int, c: Color) =>
       //Applies the colour to the image where x and y indicate coordinates and c is a Color object.
+     // log.info(x.toString(), y.toString())
       image(x, y) = c
       //Decrements one from waiting.
       waiting -= 1
@@ -64,26 +65,26 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
       //Calls nextRow which increments currentRow. If nextRow returns true then work is delegated.
       //If nextRow returns false, then no work is delegated.
       if (nextRow()) {
-         router.route(TracerProtocol.TracePixel(scene, image.width, image.height, row), self)
+         router.route(TracerProtocol.TracePixel(scene, image.width, image.height, currentRow), self)
       //Checks whether waiting equals 0. When waiting is 0, then all processing is complete.
       //The coordinator informs the Listener using a Finish message..
-      }else if (waiting == 0) {
+      } else if (waiting == 0) {
         listener ! ListenerProtocol.Finish(image, outputFile)
       }
   }
   
   /**
-   * Increments the currentRow counter by 1. Returns truw or false depending on whether the row is
+   * Increments the currentRow counter by 1. Returns true or false depending on whether the row is
    * in bounds of the image file.
    * 
-   * @return true if current row was incremented.
+   * @return true if current row is in bounds.
    */
   private def nextRow(): Boolean = {
-    if (currentYAxis != image.height) {
-      currentRow += 1
-      true
-    } else {
-      false
+    var result = false
+    currentRow += 1
+    if (currentRow < image.height) {
+      result = true
     }
+    result
   }
 }
