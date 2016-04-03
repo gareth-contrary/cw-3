@@ -25,7 +25,8 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
   private var currentRow = -1
   
   //The number of TracerActors that the Coordinator will create.
-  val nrOfWorkers = 150
+  //Will utilise the number of cores on the machine.
+  val nrOfWorkers = Runtime.getRuntime().availableProcessors()
   log.info("Number of TracerActors: " + nrOfWorkers.toString())
 
   //Creates a router to manage the TracerActors.
