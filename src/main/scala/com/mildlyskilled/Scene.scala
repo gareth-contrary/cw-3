@@ -50,7 +50,18 @@ class Scene(val objects: List[Shape], val lights: List[Light]) {
   val eye = Vector.origin
   val angle = 90f // viewing angle
   //val angle = 180f // fisheye
-
+  
+  
+  /**
+   * Given th dimensions of an image and the coordinates of a pixel, will
+   * determine the colour of that pixel.
+   * 
+   * @param width of the image.
+   * @param height of the image.
+   * @param x the postion on x-axis.
+   * @para y the position on the y-axis.
+   * @return the colour of the pixel as a Color object.
+   */
   def traceImage(width: Int, height: Int, x: Int, y: Int): Color = {
 
     val frustum = (.5 * angle * math.Pi / 180).toFloat
@@ -62,10 +73,7 @@ class Scene(val objects: List[Shape], val lights: List[Light]) {
     // average the results to get smoother images.
     val ss = Trace.AntiAliasingFactor
 
-    // TODO:
-    // Create a parallel version of this loop, creating one actor per pixel or per row of
-    // pixels.  Each actor should send the Coordinator messages to set the
-    // color of a pixel.  The actor need not receive any messages.
+    // Re-factored to process one pixel at a time. Used by TracerActors.
 
 
         // This loop body can be sequential.
