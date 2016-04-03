@@ -1,6 +1,6 @@
 package com.mildlyskilled.actor
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props, Terminated}
 import com.mildlyskilled.{Image, Color, Scene}
 import com.mildlyskilled.protocol.{CoordinatorProtocol, ListenerProtocol, TracerProtocol}
 import akka.routing.{Router, RoundRobinRoutingLogic, ActorRefRoutee}
@@ -25,7 +25,7 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
   private var currentRow = -1
   
   //The number of TracerActors that the Coordinator will create.
-  //Will utilise the number of cores on the machine.
+  //Utilise the number of availabe cores.
   val nrOfWorkers = Runtime.getRuntime().availableProcessors()
   log.info("Number of TracerActors: " + nrOfWorkers.toString())
 
@@ -71,6 +71,8 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
       //The coordinator informs the Listener using a Finish message..
       } else if (waiting == 0) {
         listener ! ListenerProtocol.Finish(image, outputFile)
+      } else {
+        log.info(sender.path + " has run out of work.")
       }
   }
   
