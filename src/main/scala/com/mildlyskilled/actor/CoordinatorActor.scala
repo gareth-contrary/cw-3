@@ -39,10 +39,14 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
   }
 
   def receive = {
+    //TraceImage message being processing.
     case CoordinatorProtocol.TraceImage =>
+      //Deleates the first row o f work for each actor.
       for (i <- 0 until nrOfWorkers) {
-        var row = nextRow()
-        router.route(TracerProtocol.TracePixel(scene, image.width, image.height, row), self)
+        //
+        if (nextRow()) {
+          router.route(TracerProtocol.TracePixel(scene, image.width, image.height, currentRow), self)
+        }
       }
     case CoordinatorProtocol.Set(x: Int, y: Int, c: Color) =>
       image(x, y) = c
@@ -56,11 +60,12 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef, sce
       }
   }
 
-  private def nextRow(): Int = {
-    //if (currentYAxis != image.height) {
+  private def nextRow(): Boolean = {
+    if (currentYAxis != image.height) {
       currentRow += 1
-    //}
-    currentRow
+      true
+    } else {
+      false
+    }
   }
-
 }
