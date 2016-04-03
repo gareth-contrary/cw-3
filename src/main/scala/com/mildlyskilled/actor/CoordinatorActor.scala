@@ -8,8 +8,7 @@ import akka.routing._
 
 class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef) extends Actor with ActorLogging {
   private var waiting = image.width * image.height
-  private var currentXAxis = -1
-  private var currentYAxis = 0
+  private var currentRow = -1
   private var scene: Scene = null
   val nrOfWorkers = 150
   log.info("Number of TracerActors: " + nrOfWorkers.toString())
@@ -27,31 +26,27 @@ class CoordinatorActor(outputFile: String, image: Image, listener: ActorRef) ext
   def receive = {
     case CoordinatorProtocol.TraceImage(newScene) =>
       scene = newScene
-      for (x <- 0 until nrOfWorkers) {
-        var (x, y) = nextPixel()
-        router.route(TracerProtocol.TracePixel(scene, image.width, image.height, x, y), self)
+      for (i <- 0 until nrOfWorkers) {
+        var row = nextRow()
+        router.route(TracerProtocol.TracePixel(scene, image.width, image.height, row), self)
       }
     case CoordinatorProtocol.Set(x: Int, y: Int, c: Color) =>
       image(x, y) = c
       waiting -= 1
-
-      if (waiting > 0) {
-        var (x, y) = nextPixel()
-        if (y < image.height) {
-          router.route(TracerProtocol.TracePixel(scene, image.width, image.height, x, y), self)
-        }
+    case CoordinatorProtocol.RequestMoreWork =>
+      var row = nextRow()
+      if (currentRow < image.height) {
+         router.route(TracerProtocol.TracePixel(scene, image.width, image.height, row), self)
       } else if (waiting == 0) {
         listener ! ListenerProtocol.Finish(image, outputFile)
       }
   }
 
-  private def nextPixel(): (Int, Int) = {
-    currentXAxis += 1
-    if (currentXAxis == image.width) {
-      currentXAxis = 0
-      currentYAxis += 1
-    }
-    (currentXAxis, currentYAxis)
+  private def nextRow(): Int = {
+    //if (currentYAxis != image.height) {
+      currentRow += 1
+    //}
+    currentRow
   }
 
 }
