@@ -2,6 +2,7 @@ package com.mildlyskilled.actor
 
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import com.mildlyskilled.protocol.ListenerProtocol
+import com.mildlyskilled.Trace
 
 /**
  * Prints the image and shuts down the actor system.
@@ -22,6 +23,12 @@ class Listener extends Actor with ActorLogging {
       //Determines execution time.
       val duration = (System.currentTimeMillis - start).toString()
       log.info("Duration: " + duration + "ms")
+      
+      //Prints logs to console.
+      log.info("rays cast " + Trace.rayCount)
+      log.info("rays hit " + Trace.hitCount)
+      log.info("light " + Trace.lightCount)
+      log.info("dark " + Trace.darkCount)
       
       //Shuts down system.
       context.system.terminate()

@@ -12,6 +12,7 @@ object TraceMain extends App {
   val scene = FileReader.parse(infile)
 
   render(scene, outfile, Trace.Width, Trace.Height)
+
   
   /**
    * Renders and prints the ray-traced image.
