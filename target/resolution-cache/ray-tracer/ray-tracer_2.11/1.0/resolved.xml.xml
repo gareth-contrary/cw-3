@@ -4,7 +4,7 @@
 		module="ray-tracer_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20160403151257"
+		publication="20160403201123"
 	>
 		<description>
 		ray-tracer
@@ -36,6 +36,7 @@
 		<dependency org="org.scala-lang" name="scala-library" rev="2.11.7" conf="scala-tool->default,optional(default);compile->default(compile)"/>
 		<dependency org="com.typesafe.akka" name="akka-actor_2.11" rev="2.4.2" conf="compile->default(compile)"/>
 		<dependency org="com.typesafe.akka" name="akka-testkit_2.11" rev="2.4.2" conf="compile->default(compile)"/>
+		<dependency org="org.scalactic" name="scalactic_2.11" rev="2.2.6" conf="compile->default(compile)"/>
 		<dependency org="org.scalatest" name="scalatest_2.11" rev="2.2.6" conf="test->default(compile)"/>
 	</dependencies>
 </ivy-module>
