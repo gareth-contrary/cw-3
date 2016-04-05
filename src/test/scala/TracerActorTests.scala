@@ -1,7 +1,6 @@
 package sample.akka.testkit
 
-import akka.actor.ActorSystem
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
 import org.scalatest.MustMatchers
 import org.scalatest.WordSpecLike
@@ -22,6 +21,8 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
   val row = 0
   val image = new Image(Trace.Width, Trace.Height)
   val color = Color.black
+  val outfile = "output.png"
+  val myListener = system.actorOf(Props[Listener], "listener")
 
   "A Tracer actor" must {
     // Creation of the TestActorRef
@@ -42,11 +43,11 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
     }
   }
 
- /* "A Tracer actor" must {
+  "A Coordinator actor" must {
     // Creation of the TestActorRef
-    val actorRef2 = TestActorRef[CoordinatorActor]
+    val actorRef2 = TestActorRef(Props(new CoordinatorActor(outfile, image, myListener, scene)))
 
-    "send a set message" in {
+    "send a set message2" in {
       within(10000 millis) {
         // This call is synchronous. The actor receive() method will be called in the current thread
         actorRef2 ! CoordinatorProtocol.TraceImage
@@ -54,7 +55,7 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
         expectMsg(TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, row))
       }
     }
-    "send a set message" in {
+    "send a set message3" in {
       within(10000 millis) {
         // This call is synchronous. The actor receive() method will be called in the current thread
         actorRef2 ! CoordinatorProtocol.RequestMoreWork
@@ -62,7 +63,7 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
         expectMsg(TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, 802))
       }
     }
-    "send a set message" in {
+    "send a set message4" in {
       within(10000 millis) {
         // This call is synchronous. The actor receive() method will be called in the current thread
         actorRef2 ! CoordinatorProtocol.Set(0, 0, Color.black)
@@ -75,5 +76,5 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
       // With actorRef.underlyingActor, we can access the SimpleActor instance created by Akka
       expectNoMsg
     }*/
-  }*/
+  }
 }
