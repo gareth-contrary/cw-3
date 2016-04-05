@@ -34,6 +34,7 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
     listenerActorRef.stop()
     coordActorRef.stop()
     myListener.stop()
+    shutdown()
   }
 
   "A Tracer actor" must {
@@ -57,7 +58,7 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
     // Creation of the TestActorRef
 
     /*"send a set message2" in {
-      within(10000 millis) {
+      within(1000 millis) {
         // This call is synchronous. The actor receive() method will be called in the current thread
         coordActorRef ! CoordinatorProtocol.TraceImage
         // With actorRef.underlyingActor, we can access the SimpleActor instance created by Akka
@@ -65,11 +66,11 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
       }
     }
     "send a set message3" in {
-      within(10000 millis) {
+      within(1000 millis) {
         // This call is synchronous. The actor receive() method will be called in the current thread
         coordActorRef ! CoordinatorProtocol.RequestMoreWork
         // With actorRef.underlyingActor, we can access the SimpleActor instance created by Akka
-        expectMsg(TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, 802))
+        expectMsg(TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, 0))
       }
     }*/
     "send a set message4" in {
@@ -80,8 +81,8 @@ class TracerActorTests extends TestKit(ActorSystem("testSystem"))
         expectNoMsg()
       }
     }
-    /*"send 800 set messages" in {
-      actorRef ! TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, row)
+   /* "send 800 set messages" in {
+      coordActorRef ! TracerProtocol.TracePixels(scene, Trace.Width, Trace.Height, row)
       // With actorRef.underlyingActor, we can access the SimpleActor instance created by Akka
       expectNoMsg
     }*/
